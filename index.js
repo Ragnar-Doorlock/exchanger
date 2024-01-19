@@ -22,7 +22,7 @@ const ExchangeRateProvider = require('./app/exchangeRateProvider');
 const ExchangeRateRepository = require('./app/exchangeRateRepository');
 const ExchangerFactory = require('./app/entities/exchangerFactory');
 const GetExchangeRateResponseBuilder = require('./app/get-exchange-rate/getExchangeRateResponseBuilder');
-const Cache = require('./app/cacheProvider');
+const Cache = require('./app/cache-provider/cacheProvider');
 
 (async () => {
     const loggerProvider = new LoggerProvider(log4js);

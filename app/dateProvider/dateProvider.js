@@ -15,6 +15,11 @@ class DateProvider {
 
         return yyyy + '-' + mm + '-' + dd;
     }
+
+    convertDate(date) {
+        const convertedDate = new Date(date);
+        return convertedDate;
+    }
 }
 
 module.exports = DateProvider;

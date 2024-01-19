@@ -20,11 +20,15 @@ class ExchangeRateRepository {
         if (result.length === 0) {
             return null;
         }
-        await this.cache.set(date, JSON.stringify(result));
+        const stringifiedResult = JSON.stringify(result[0]);
+        //console.log('str result ' + stringifiedResult);
+        await this.cache.set(date, stringifiedResult);
+        //console.log( await this.cache.get(date) );
         return this.exchangerFactory.create({
-            USDRate: result.usd,
-            EURRate: result.eur,
-            date: result.date
+            USDRate: result[0].usd,
+            EURRate: result[0].eur,
+            date: result[0].date,
+            rates: result[0].rates
         });
     }
 

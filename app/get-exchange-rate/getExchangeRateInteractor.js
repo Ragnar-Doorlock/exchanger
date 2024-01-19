@@ -47,8 +47,22 @@ class GetExchangeRateInteractor {
                 date: request.date
             });
 
+            await this.exchangeRateRepository.save({
+                date: request.date,
+                usd: resultUSD,
+                eur: resultEUR,
+                rates
+            });
             this.presenter.presentSuccess(this.responseBuilder.build( entity ));
+            return;
         }
+
+        const entity = this.exchangerFactory.create({
+            USDRate: rates.USDRate,
+            EURRate: rates.EURRate,
+            date: request.date
+        });
+        this.presenter.presentSuccess(this.responseBuilder.build( entity ));
     }
 }
 

@@ -4,7 +4,7 @@ class Cache {
     }
 
     async set(key, value) {
-
+        await this.cache.set(key, value);
     }
 
     async get(key) {
@@ -17,6 +17,10 @@ class Cache {
 
     async clear() {
         await this.cache.clear();
+    }
+
+    async entries() {
+        await this.cache.entries();
     }
 }
 
