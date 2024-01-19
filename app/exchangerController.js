@@ -10,17 +10,13 @@ class ExchangerRouterBuilder {
         exchangeRateRepository,
         exchangerFactory,
         getExchangeRateResponseBuilder,
-        loggerProvider,
-        exchangeRateProvider,
-        dateProvider
+        exchangeRateProvider
     }) {
         this.router = express.Router();
         this.exchangeRateRepository = exchangeRateRepository;
         this.exchangerFactory = exchangerFactory;
         this.getExchangeRateResponseBuilder = getExchangeRateResponseBuilder;
-        this.loggerProvider = loggerProvider;
         this.exchangeRateProvider = exchangeRateProvider;
-        this.dateProvider = dateProvider;
     }
 
     createRoutes() {
@@ -33,9 +29,7 @@ class ExchangerRouterBuilder {
                 exchangerFactory: this.exchangerFactory,
                 exchangeRateRepository: this.exchangeRateRepository,
                 getExchangeRateResponseBuilder: this.getExchangeRateResponseBuilder,
-                loggerProvider: this.loggerProvider,
-                exchangeRateProvider: this.exchangeRateProvider,
-                dateProvider: this.dateProvider,
+                exchangeRateProvider: this.exchangeRateProvider
             });
 
             try {

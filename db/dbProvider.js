@@ -1,17 +1,19 @@
 class DBProvider {
-    constructor({ client }) {
+    constructor({ client, db, collection }) {
         this.client = client;
+        this.db = db;
+        this.collection = collection;
     }
 
     async insert(data) {
-        const db = this.client.db(process.env.MONGO_DB);
-        const collection = db.collection(process.env.MONGO_COLLECTION);
+        const db = this.client.db(this.db);
+        const collection = db.collection(this.collection);
         await collection.insertOne(data);
     }
 
     async getData(data) {
-        const db = this.client.db(process.env.MONGO_DB);
-        const collection = db.collection(process.env.MONGO_COLLECTION);
+        const db = this.client.db(this.db);
+        const collection = db.collection(this.collection);
         return await collection.find(data).toArray();
     }
 }

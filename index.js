@@ -14,7 +14,9 @@ log4js.configure({
         default: { appenders: ['console'], level: 'debug' }
     }
 });
-const DateProvider = require('./app/dateProvider/dateProvider');
+const latestCurrencyUrl = process.env.EXCHANGE_RATES_URL_LATEST;
+const historicalCurrencyUrl = process.env.EXCHANGE_RATES_HISTORICAL;
+const appId = process.env.EXCHANGE_RATES_APP_ID;
 const ExchangerRouterBuilder = require('./app/exchangerController');
 const DBProvider = require('./db/dbProvider');
 const LoggerProvider = require('./app/loggerProvider');
@@ -26,9 +28,18 @@ const Cache = require('./app/cache-provider/cacheProvider');
 
 (async () => {
     const loggerProvider = new LoggerProvider(log4js);
-    const dateProvider = new DateProvider();
-    const dbProvider = new DBProvider({ client });
-    const exchangeRateProvider = new ExchangeRateProvider({ fx, axios });
+    const dbProvider = new DBProvider({
+        client,
+        db: process.env.MONGO_DB,
+        collection: process.env.MONGO_COLLECTION
+    });
+    const exchangeRateProvider = new ExchangeRateProvider({
+        fx,
+        axios,
+        latestCurrencyUrl,
+        historicalCurrencyUrl,
+        appId
+    });
     const logger = loggerProvider.create('Logger');
     const exchangerFactory = new ExchangerFactory();
     const cache = new Cache();
@@ -40,9 +51,7 @@ const Cache = require('./app/cache-provider/cacheProvider');
         exchangeRateRepository,
         exchangerFactory,
         getExchangeRateResponseBuilder,
-        loggerProvider,
-        exchangeRateProvider,
-        dateProvider
+        exchangeRateProvider
     });
 
     app.use(express.json());

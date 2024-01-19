@@ -16,29 +16,23 @@ class ExchangeRateRepository {
                 date: date
             });
         }
-        const result = await this.dbProvider.getData({ date: date });
-        if (result.length === 0) {
+        const [result] = await this.dbProvider.getData({ date: date });
+        if (!result) {
             return null;
         }
-        const stringifiedResult = JSON.stringify(result[0]);
-        //console.log('str result ' + stringifiedResult);
+        const stringifiedResult = JSON.stringify(result);
         await this.cache.set(date, stringifiedResult);
-        //console.log( await this.cache.get(date) );
         return this.exchangerFactory.create({
-            USDRate: result[0].usd,
-            EURRate: result[0].eur,
-            date: result[0].date,
-            rates: result[0].rates
+            USDRate: result.usd,
+            EURRate: result.eur,
+            date: result.date,
+            rates: result.rates
         });
     }
 
     async save(data) {
         await this.dbProvider.insert(data);
         this.cache.clear();
-    }
-
-    async updateRates(date) {
-        // probably won't be needed
     }
 }
 
