@@ -49,7 +49,7 @@ class GetExchangeRateInteractor {
             date: request.date,
             usd: resultUSD,
             eur: resultEUR,
-            rates
+            requestRates
         });
         this.presenter.presentSuccess(this.responseBuilder.build( entity ));
     }
