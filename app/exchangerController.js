@@ -3,6 +3,9 @@ const ApiError = require('./errors/apiError');
 const GetExchangeRateValidator = require('./get-exchange-rate/getExchangeRateValidator');
 const GetExchangeRateInteractor = require('./get-exchange-rate/getExchangeRateInteractor');
 const GetExchangeRateHttpRequest = require('./get-exchange-rate/getExchangeRateHttpRequest');
+const ConvertHttpRequest = require('./convert/convertHttpRequest');
+const ConvertInteractor = require('./convert/convertInteractor');
+const ConvertValidator = require('./convert/convertValidator');
 
 class ExchangerRouterBuilder {
     constructor({
@@ -10,13 +13,15 @@ class ExchangerRouterBuilder {
         exchangeRateRepository,
         exchangerFactory,
         getExchangeRateResponseBuilder,
-        exchangeRateProvider
+        exchangeRateProvider,
+        convertResponseBuilder
     }) {
         this.router = express.Router();
         this.exchangeRateRepository = exchangeRateRepository;
         this.exchangerFactory = exchangerFactory;
         this.getExchangeRateResponseBuilder = getExchangeRateResponseBuilder;
         this.exchangeRateProvider = exchangeRateProvider;
+        this.convertResponseBuilder = convertResponseBuilder;
     }
 
     createRoutes() {
@@ -34,6 +39,24 @@ class ExchangerRouterBuilder {
 
             try {
                 await interactor.execute(new GetExchangeRateHttpRequest(request));
+            } catch (error) {
+                presenter.presentFailure(new ApiError(error));
+            }
+        });
+
+        this.router.post('/convert', async (request, response) => {
+            const validator = new ConvertValidator();
+            const presenter = new HttpPresenter(request, response);
+            const interactor = new ConvertInteractor({
+                presenter,
+                validator,
+                exchangeRateRepository: this.exchangeRateRepository,
+                exchangeRateProvider: this.exchangeRateProvider,
+                convertResponseBuilder: this.convertResponseBuilder
+            });
+
+            try {
+                await interactor.execute(new ConvertHttpRequest(request));
             } catch (error) {
                 presenter.presentFailure(new ApiError(error));
             }

@@ -1,4 +1,5 @@
 const ValidationError = require('../errors/validationError');
+const currencies = require('../currencies');
 
 class GetExchangeRateInteractor {
     constructor({
@@ -38,8 +39,21 @@ class GetExchangeRateInteractor {
         } else {
             requestRates = await this.exchangeRateProvider.getHistoricalRates(request.date);
         }
-        const resultUSD = await this.exchangeRateProvider.calculateExchangeRate(requestRates, 'USD');
-        const resultEUR = await this.exchangeRateProvider.calculateExchangeRate(requestRates, 'EUR');
+
+        const amountToConvert = 1;
+
+        const resultUSD = await this.exchangeRateProvider.calculateExchangeRate(
+            requestRates,
+            amountToConvert,
+            currencies.USD,
+            currencies.UAH
+        );
+        const resultEUR = await this.exchangeRateProvider.calculateExchangeRate(
+            requestRates,
+            amountToConvert,
+            currencies.EUR,
+            currencies.UAH
+        );
         const entity = this.exchangerFactory.create({
             USDRate: resultUSD,
             EURRate: resultEUR,

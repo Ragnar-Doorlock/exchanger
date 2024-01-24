@@ -24,6 +24,7 @@ const ExchangeRateProvider = require('./app/exchangeRateProvider');
 const ExchangeRateRepository = require('./app/exchangeRateRepository');
 const ExchangerFactory = require('./app/entities/exchangerFactory');
 const GetExchangeRateResponseBuilder = require('./app/get-exchange-rate/getExchangeRateResponseBuilder');
+const ConvertResponseBuilder = require('./app/convert/convertResponseBuilder');
 const Cache = require('./app/cache-provider/cacheProvider');
 
 (async () => {
@@ -45,13 +46,15 @@ const Cache = require('./app/cache-provider/cacheProvider');
     const cache = new Cache();
     const exchangeRateRepository = new ExchangeRateRepository({ dbProvider, exchangerFactory, cache });
     const getExchangeRateResponseBuilder = new GetExchangeRateResponseBuilder();
+    const convertResponseBuilder = new ConvertResponseBuilder();
 
     const exchangerRoutes = new ExchangerRouterBuilder({
         express,
         exchangeRateRepository,
         exchangerFactory,
         getExchangeRateResponseBuilder,
-        exchangeRateProvider
+        exchangeRateProvider,
+        convertResponseBuilder
     });
 
     app.use(express.json());
