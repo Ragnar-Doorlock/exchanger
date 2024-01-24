@@ -1,5 +1,6 @@
 const ValidationError = require('../errors/validationError');
 const { DateTime } = require('luxon');
+const currencies = require('../currencies');
 
 class ConvertInteractor {
     constructor({
@@ -7,13 +8,15 @@ class ConvertInteractor {
         validator,
         exchangeRateRepository,
         exchangeRateProvider,
-        convertResponseBuilder
+        convertResponseBuilder,
+        exchangerFactory
     }) {
         this.presenter = presenter;
         this.validator = validator;
         this.exchangeRateRepository = exchangeRateRepository;
         this.responseBuilder = convertResponseBuilder;
         this.exchangeRateProvider = exchangeRateProvider;
+        this.exchangerFactory = exchangerFactory;
     }
 
     async execute(request) {
@@ -28,12 +31,41 @@ class ConvertInteractor {
         let rates = await this.exchangeRateRepository.getRateByDate(currentDate);
 
         if (!rates) {
-            rates = await this.exchangeRateProvider.getActualRates();
+            const currencyValues = await this.exchangeRateProvider.getActualRates();
+            const amountToConvert = 1;
+            const resultUSD = await this.exchangeRateProvider.calculateExchangeRate(
+                currencyValues,
+                amountToConvert,
+                currencies.USD,
+                currencies.UAH
+            );
+            const resultEUR = await this.exchangeRateProvider.calculateExchangeRate(
+                currencyValues,
+                amountToConvert,
+                currencies.EUR,
+                currencies.UAH
+            );
+            await this.exchangeRateRepository.save({
+                date: currentDate,
+                usd: resultUSD,
+                eur: resultEUR,
+                currencyValues
+            });
+            rates = this.exchangerFactory.create({
+                USDRate: resultUSD,
+                EURRate: resultEUR,
+                date: currentDate,
+                rates: currencyValues
+            });
         }
 
+        /* console.log(rates.currencyValues);
+        console.log(request.amount);
+        console.log(request.firstCurrency);
+        console.log(request.secondCurrency); */
         const result = await this.exchangeRateProvider.calculateExchangeRate(
-            rates,
-            request.amount,
+            rates.currencyValues,
+            Number(request.amount),
             request.firstCurrency,
             request.secondCurrency
         );

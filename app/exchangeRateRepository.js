@@ -10,24 +10,27 @@ class ExchangeRateRepository {
         if (isRateCached) {
             const rates = await this.cache.get(date);
             const parsedRates = JSON.parse(rates);
-            return this.exchangerFactory.create({
+            const result = this.exchangerFactory.create({
                 USDRate: parsedRates.usd,
                 EURRate: parsedRates.eur,
-                date: date
+                date: date,
+                rates: parsedRates.currencyValues
             });
+            return result;
         }
-        const [result] = await this.dbProvider.getData({ date: date });
-        if (!result) {
+        const [dbResult] = await this.dbProvider.getData({ date: date });
+        if (!dbResult) {
             return null;
         }
-        const stringifiedResult = JSON.stringify(result);
+        const stringifiedResult = JSON.stringify(dbResult);
         await this.cache.set(date, stringifiedResult);
-        return this.exchangerFactory.create({
-            USDRate: result.usd,
-            EURRate: result.eur,
-            date: result.date,
-            rates: result.rates
+        const result = this.exchangerFactory.create({
+            USDRate: dbResult.usd,
+            EURRate: dbResult.eur,
+            date: dbResult.date,
+            rates: dbResult.currencyValues
         });
+        return result;
     }
 
     async save(data) {

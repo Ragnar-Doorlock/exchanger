@@ -52,7 +52,8 @@ class ExchangerRouterBuilder {
                 validator,
                 exchangeRateRepository: this.exchangeRateRepository,
                 exchangeRateProvider: this.exchangeRateProvider,
-                convertResponseBuilder: this.convertResponseBuilder
+                convertResponseBuilder: this.convertResponseBuilder,
+                exchangerFactory: this.exchangerFactory
             });
 
             try {

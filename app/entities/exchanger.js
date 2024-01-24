@@ -3,7 +3,7 @@ class Exchanger {
         this.USDRate = data.USDRate;
         this.EURRate = data.EURRate;
         this.date = data.date;
-        this.rates = data.rates;
+        this.currencyValues = data.rates;
     }
 
     getUSDRate() {
@@ -19,7 +19,7 @@ class Exchanger {
     }
 
     getRates() {
-        return this.rates;
+        return this.currencyValues;
     }
 }
 

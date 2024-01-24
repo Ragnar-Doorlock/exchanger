@@ -33,23 +33,24 @@ class GetExchangeRateInteractor {
             return;
         }
 
-        let requestRates;
+        // rename to rates
+        let currencyValues;
         if (new Date() === new Date(request.date)) {
-            requestRates = await this.exchangeRateProvider.getActualRates();
+            currencyValues = await this.exchangeRateProvider.getActualRates();
         } else {
-            requestRates = await this.exchangeRateProvider.getHistoricalRates(request.date);
+            currencyValues = await this.exchangeRateProvider.getHistoricalRates(request.date);
         }
 
         const amountToConvert = 1;
 
         const resultUSD = await this.exchangeRateProvider.calculateExchangeRate(
-            requestRates,
+            currencyValues,
             amountToConvert,
             currencies.USD,
             currencies.UAH
         );
         const resultEUR = await this.exchangeRateProvider.calculateExchangeRate(
-            requestRates,
+            currencyValues,
             amountToConvert,
             currencies.EUR,
             currencies.UAH
@@ -63,7 +64,7 @@ class GetExchangeRateInteractor {
             date: request.date,
             usd: resultUSD,
             eur: resultEUR,
-            requestRates
+            currencyValues
         });
         this.presenter.presentSuccess(this.responseBuilder.build( entity ));
     }
