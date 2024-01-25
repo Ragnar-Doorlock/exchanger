@@ -59,12 +59,8 @@ class ConvertInteractor {
             });
         }
 
-        /* console.log(rates.currencyValues);
-        console.log(request.amount);
-        console.log(request.firstCurrency);
-        console.log(request.secondCurrency); */
         const result = await this.exchangeRateProvider.calculateExchangeRate(
-            rates.currencyValues,
+            rates.getRates(),
             Number(request.amount),
             request.firstCurrency,
             request.secondCurrency

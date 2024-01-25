@@ -33,7 +33,6 @@ class GetExchangeRateInteractor {
             return;
         }
 
-        // rename to rates
         let currencyValues;
         if (new Date() === new Date(request.date)) {
             currencyValues = await this.exchangeRateProvider.getActualRates();

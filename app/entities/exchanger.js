@@ -1,25 +1,25 @@
 class Exchanger {
     constructor(data) {
-        this.USDRate = data.USDRate;
-        this.EURRate = data.EURRate;
-        this.date = data.date;
-        this.currencyValues = data.rates;
+        this._USDRate = data.USDRate;
+        this._EURRate = data.EURRate;
+        this._date = data.date;
+        this._currencyValues = data.rates;
     }
 
     getUSDRate() {
-        return this.USDRate;
+        return this._USDRate;
     }
 
     getEURRate() {
-        return this.EURRate;
+        return this._EURRate;
     }
 
     getDate() {
-        return this.date;
+        return this._date;
     }
 
     getRates() {
-        return this.currencyValues;
+        return this._currencyValues;
     }
 }
 
