@@ -14,7 +14,7 @@ class BotPresenter {
     }
 
     presentFailure(error) {
-        this.telegramBot.sendMessage(this.message.chat.id, error);
+        this.telegramBot.sendMessage(this.message.chat.id, error.message);
     }
 }
 

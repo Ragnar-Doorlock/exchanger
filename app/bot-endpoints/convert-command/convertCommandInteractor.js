@@ -1,4 +1,5 @@
 const { DateTime } = require('luxon');
+const BotValidationError = require('../errors/validationError');
 
 class ConvertCommandInteractor {
     constructor({
@@ -21,7 +22,7 @@ class ConvertCommandInteractor {
 
         if (errors.length > 0) {
             //custom error?
-            this.presenter.presentFailure('validation error');
+            this.presenter.presentFailure( new BotValidationError(errors) );
             return;
         }
 

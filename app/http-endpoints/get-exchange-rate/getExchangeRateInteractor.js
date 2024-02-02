@@ -1,4 +1,4 @@
-const ValidationError = require('../../errors/validationError');
+const ValidationError = require('../errors/validationError');
 
 class GetExchangeRateInteractor {
     constructor({

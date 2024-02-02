@@ -7,6 +7,7 @@ const GetActualRatesCommandInteractor = require('./get-actual-rates.js/getActual
 const ConvertCommandValidator = require('./convert-command/convertCommandValidator');
 const ConvertCommandInteractor = require('./convert-command/convertCommandInteractor');
 const ConvertCommandMessage = require('./convert-command/convertCommandMessage');
+const BotError = require('./errors/botError');
 
 class BotController {
     constructor({
@@ -46,8 +47,7 @@ class BotController {
             try {
                 await interactor.execute( new GetExchangeRateMessage(message, match) );
             } catch (error) {
-                presenter.presentFailure(error.message);
-                //this.logger.error(error.message);
+                presenter.presentFailure( new BotError(error) );
             }
         });
 
@@ -66,35 +66,12 @@ class BotController {
             try {
                 await interactor.execute();
             } catch (error) {
-                presenter.presentFailure(error.message);
+                presenter.presentFailure( new BotError(error) );
             }
 
         });
 
         await this.telegramBot.onText(/\/convert (.+)/, async (message, match) => {
-            /* const chatId = message.chat.id;
-            const dataFromMessage = match[1].match(CONVERT_REGEXP);
-
-            try {
-                if (!Object.values(currencies).includes(dataFromMessage[2])) {
-                    this.telegramBot.sendMessage(chatId, 'First currency is invalid, please use UAH/USD/EUR');
-                    return;
-                }
-                if (!Object.values(currencies).includes(dataFromMessage[3])) {
-                    this.telegramBot.sendMessage(chatId, 'Second currency is invalid, please use UAH/USD/EUR');
-                    return;
-                }
-                const result = await this.axios.post(convertCurrencyUrl, {
-                    amount: dataFromMessage[1],
-                    firstCurrency: dataFromMessage[2],
-                    secondCurrency: dataFromMessage[3]
-                });
-                this.telegramBot.sendMessage(chatId, `By converting ${dataFromMessage[1]} ${dataFromMessage[2]}` +
-                ` you will get ${result.data.result} ${dataFromMessage[3]}`);
-            } catch (error) {
-                this.telegramBot.sendMessage(chatId, 'Something went wrong');
-                this.logger.error(error.message);
-            } */
             const presenter = new BotPresenter({
                 message,
                 telegramBot: this.telegramBot
@@ -111,7 +88,7 @@ class BotController {
             try {
                 await interactor.execute( new ConvertCommandMessage(message, match) );
             } catch (error) {
-                presenter.presentFailure(error.message);
+                presenter.presentFailure( new BotError(error) );
             }
 
         });

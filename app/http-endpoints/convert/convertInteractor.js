@@ -1,4 +1,4 @@
-const ValidationError = require('../../errors/validationError');
+const ValidationError = require('../errors/validationError');
 const { DateTime } = require('luxon');
 
 class ConvertInteractor {

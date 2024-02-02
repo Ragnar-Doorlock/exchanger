@@ -1,3 +1,5 @@
+const BotValidationError = require('../errors/validationError');
+
 class GetExchangeRateCommandInteractor {
     constructor({
         presenter,
@@ -19,8 +21,7 @@ class GetExchangeRateCommandInteractor {
         const errors = this.validator.validate(message);
 
         if (errors.length > 0) {
-            // create some errors for bot?
-            this.presenter.presentFailure('validation error');
+            this.presenter.presentFailure( new BotValidationError(errors) );
             return;
         }
 
