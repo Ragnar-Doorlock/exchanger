@@ -1,4 +1,5 @@
-const currencies = require('../currencies');
+const ONLY_NUMBERS_REGEXP = /^[0-9]+$/;
+const currencies = require('../../currencies');
 
 class ConvertValidator {
     validate(request) {
@@ -6,6 +7,8 @@ class ConvertValidator {
 
         if (!request.amount) {
             errors.push('Amount is required.');
+        } else if (ONLY_NUMBERS_REGEXP.test(request.amount)) {
+            errors.push('Amount should contain only numbers.');
         }
 
         if (!request.firstCurrency) {

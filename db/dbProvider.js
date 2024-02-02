@@ -14,7 +14,8 @@ class DBProvider {
     async getData(data) {
         const db = this.client.db(this.db);
         const collection = db.collection(this.collection);
-        return await collection.find(data).toArray();
+        const result = await collection.find(data).toArray();
+        return result;
     }
 }
 

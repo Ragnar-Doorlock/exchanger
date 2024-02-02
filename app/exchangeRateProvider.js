@@ -25,11 +25,11 @@ class ExchangeRateProvider {
         return result.data.rates;
     }
 
-    async calculateExchangeRate(rates, amount, firstCurrency, secondCurrency) {
+    async calculateExchangeRate({ rates, amount, from, to }) {
         try {
             this.fx.base = currencies.USD;
             this.fx.rates = rates;
-            return this.fx.convert(amount, { from: firstCurrency, to: secondCurrency });
+            return this.fx.convert(amount, { from, to });
         } catch (error) {
             throw new Error(error);
         }

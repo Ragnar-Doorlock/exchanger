@@ -1,5 +1,4 @@
-const ValidationError = require('../errors/validationError');
-const currencies = require('../currencies');
+const ValidationError = require('../../errors/validationError');
 
 class GetExchangeRateInteractor {
     constructor({
@@ -40,31 +39,7 @@ class GetExchangeRateInteractor {
             currencyValues = await this.exchangeRateProvider.getHistoricalRates(request.date);
         }
 
-        const amountToConvert = 1;
-
-        const resultUSD = await this.exchangeRateProvider.calculateExchangeRate(
-            currencyValues,
-            amountToConvert,
-            currencies.USD,
-            currencies.UAH
-        );
-        const resultEUR = await this.exchangeRateProvider.calculateExchangeRate(
-            currencyValues,
-            amountToConvert,
-            currencies.EUR,
-            currencies.UAH
-        );
-        const entity = this.exchangerFactory.create({
-            USDRate: resultUSD,
-            EURRate: resultEUR,
-            date: request.date
-        });
-        await this.exchangeRateRepository.save({
-            date: request.date,
-            usd: resultUSD,
-            eur: resultEUR,
-            currencyValues
-        });
+        const entity = await this.exchangeRateRepository._getEntityWithRates(currencyValues, request.date);
         this.presenter.presentSuccess(this.responseBuilder.build( entity ));
     }
 }

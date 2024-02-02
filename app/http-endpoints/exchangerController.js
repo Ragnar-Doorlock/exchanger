@@ -1,5 +1,5 @@
 const HttpPresenter = require('./httpPresenter');
-const ApiError = require('./errors/apiError');
+const ApiError = require('../errors/apiError');
 const GetExchangeRateValidator = require('./get-exchange-rate/getExchangeRateValidator');
 const GetExchangeRateInteractor = require('./get-exchange-rate/getExchangeRateInteractor');
 const GetExchangeRateHttpRequest = require('./get-exchange-rate/getExchangeRateHttpRequest');
