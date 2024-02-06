@@ -1,6 +1,6 @@
 class GetExchangeRateHttpRequest {
     constructor(request) {
-        this.date = request.body.date;
+        this.date = request.params.date;
     }
 }
 
