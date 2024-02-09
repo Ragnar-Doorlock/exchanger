@@ -1,9 +1,9 @@
 module.exports = {
-    async up(db, client) {
+    async up(db) {
         await db.createCollection('exchanger');
     },
 
-    async down(db, client) {
+    async down(db) {
         await db.collection('exchanger').drop();
     }
 };

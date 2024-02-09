@@ -25,7 +25,7 @@ class ExchangerRouterBuilder {
     }
 
     createRoutes() {
-        this.router.post('/get-rate', async (request, response) => {
+        this.router.get('/:date', async (request, response) => {
             const validator = new GetExchangeRateValidator();
             const presenter = new HttpPresenter(request, response);
             const interactor = new GetExchangeRateInteractor({

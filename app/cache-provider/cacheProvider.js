@@ -8,11 +8,11 @@ class Cache {
     }
 
     async get(key) {
-        return await this.cache.get(key);
+        return this.cache.get(key);
     }
 
     async has(key) {
-        return await this.cache.has(key);
+        return this.cache.has(key);
     }
 
     async clear() {

@@ -1,8 +1,16 @@
+const currencies = require('./currencies');
+
 class ExchangeRateRepository {
-    constructor({ dbProvider, exchangerFactory, cache }) {
+    constructor({
+        dbProvider,
+        exchangerFactory,
+        cache,
+        exchangeRateProvider
+    }) {
         this.dbProvider = dbProvider;
         this.exchangerFactory = exchangerFactory;
         this.cache = cache;
+        this.exchangeRateProvider = exchangeRateProvider;
     }
 
     async getRateByDate(date) {
@@ -36,6 +44,37 @@ class ExchangeRateRepository {
     async save(data) {
         await this.dbProvider.insert(data);
         this.cache.clear();
+    }
+
+    async _getEntityWithRates(currencyValues, date) {
+        const amountToConvert = 1;
+
+        const resultUSD = await this.exchangeRateProvider.calculateExchangeRate({
+            rates: currencyValues,
+            amount: amountToConvert,
+            from: currencies.USD,
+            to: currencies.UAH
+        });
+        const resultEUR = await this.exchangeRateProvider.calculateExchangeRate({
+            rates: currencyValues,
+            amount: amountToConvert,
+            from: currencies.EUR,
+            to: currencies.UAH
+        });
+        const entity = this.exchangerFactory.create({
+            USDRate: resultUSD,
+            EURRate: resultEUR,
+            date: date,
+            rates: currencyValues
+        });
+        await this.save({
+            date: date,
+            usd: resultUSD,
+            eur: resultEUR,
+            currencyValues
+        });
+
+        return entity;
     }
 }
 
